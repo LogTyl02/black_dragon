@@ -21,10 +21,13 @@ public class BlackDragon extends JFrame implements KeyListener {
 	
 	private AsciiPanel terminal;
 	private Screen screen;
+	
+	public static int screenWidth = 100;
+	public static int screenHeight = 30;
 
 	public BlackDragon() {
 		super();
-		terminal = new AsciiPanel();
+		terminal = new AsciiPanel(screenWidth, screenHeight);
 		add(terminal);
 		pack();
 		screen = new StartScreen();
