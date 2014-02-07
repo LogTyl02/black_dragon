@@ -1,24 +1,54 @@
 package com.almanac.blackdragon.World;
 
+import java.awt.Color;
+
+import com.almanac.blackdragon.Entity.Tile;
+
 public class World {
-	public boolean exists;
-	private Room[][] rooms;
+	private Tile[][] tiles;
+	private int width;
+	private int height;
 	
+	/*
+	 * 	Constructor
+	 */
 	
-	public World(Room[][] rooms) {
-		this.rooms = rooms;
-		this.exists = true;		// Debugging
+	public World(Tile[][] tiles) {
+		this.tiles = tiles;
+		this.width = tiles.length;
+		this.height = tiles[0].length;
 	}
 	
-	public Room[][] getRooms() {
-		return rooms;
+	/*
+	 * 	Methods
+	 */
+	
+	public Tile tile(int x, int y){
+        if (x < 0 || x >= width || y < 0 || y >= height)
+            return Tile.VOID;
+        else
+            return tiles[x][y];
+    }
+	
+	
+	/*
+	 * 	Getters
+	 */
+	
+	public int width() {
+		return width;
 	}
 	
-	public void fillRooms() {
-		for (int x = 0; x < this.rooms.length; x++) {
-			for (int y = 0; y < this.rooms[x].length; y++) {
-				this.rooms[x][y] = new Room();
-			}
-		} 
+	public int height() {
+		return height;
 	}
+	
+	public char glyph(int x, int y){
+        return tile(x, y).glyph();
+    }
+	
+	public Color color(int x, int y) {
+        return tile(x, y).color();
+    }
+	
 }

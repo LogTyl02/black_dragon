@@ -23,54 +23,83 @@ public class PlayScreen implements Screen {
 	private int worldWidth;
 	private int worldHeight;
 	
+	private int centerX;
+	private int centerY;
+	
 	private String NAME = "Dogleaf";
 	private String TITLE = "the Explorer";
 	private String LOCATION = " SPOOKY FOREST ";
 	
 	public PlayScreen() {
-		screenWidth			=	80;
-		screenHeight		=	23;
+		screenWidth			=	100;
+		screenHeight		=	30;
 		messages			=	new ArrayList<String>();
-		worldWidth			=	5;
-		worldHeight			=	5;
+		worldWidth			=	200;
+		worldHeight			=	100;
 		
 		createWorld(worldWidth, worldHeight);
 	}
 	
 	private void createWorld(int worldWidth, int worldHeight) {
-		world = new WorldBuilder(worldWidth, worldHeight).build();
-		world.fillRooms();
-		
-		//debugPrints();	// Test to make sure all objects are being created
-		
-	}
+        world = new WorldBuilder(worldWidth, worldHeight).makeCaves().build();
+    }
 
 	@Override
 	public void displayOutput(AsciiPanel terminal) {
-				
-		if (world.exists) {
-			terminal.write("Play Screen", 2, 2);
-		} else {
-			terminal.write("No world exists, yet.", 2, 2);
-		}
+		int left = getScrollX();
+        int top = getScrollY();
+    
+        displayTiles(terminal, left, top);
+        terminal.write('X', centerX - left, centerY - top);
 		
-		terminal.write(NAME, BlackDragon.screenWidth - 26, 5, Color.pink);
-		terminal.write(TITLE, BlackDragon.screenWidth - 26 + NAME.length() + 1, 5, Color.white);
-		
-		terminal.write(LOCATION, BlackDragon.screenWidth - 26, 7, Color.black, Color.green);
 	}
 
 	@Override
 	public Screen respondToUserInput(KeyEvent key) {
-		// TODO Auto-generated method stub
-		return null;
+		switch (key.getKeyCode()){
+		case KeyEvent.VK_LEFT:
+		case KeyEvent.VK_H: scrollBy(-1, 0); break;
+		case KeyEvent.VK_RIGHT:
+		case KeyEvent.VK_L: scrollBy( 1, 0); break;
+		case KeyEvent.VK_UP:
+		case KeyEvent.VK_K: scrollBy( 0,-1); break;
+		case KeyEvent.VK_DOWN:
+		case KeyEvent.VK_J: scrollBy( 0, 1); break;
+		case KeyEvent.VK_Y: scrollBy(-1,-1); break;
+		case KeyEvent.VK_U: scrollBy( 1,-1); break;
+		case KeyEvent.VK_B: scrollBy(-1, 1); break;
+		case KeyEvent.VK_N: scrollBy( 1, 1); break;
+		}
+		
+		return this;
 	}
 	
 	private void debugPrints() {
-		Room[][] r = world.getRooms();
-		System.out.println(r); 		// Does the array of rooms exist?
 		
-		System.out.println(r[1][2].getX());
-	}		
+	}
+	
+	public int getScrollX() {
+	    return Math.max(0, Math.min(centerX - screenWidth / 2, world.width() - screenWidth));
+	}
+	
+	public int getScrollY() {
+	    return Math.max(0, Math.min(centerY - screenHeight / 2, world.height() - screenHeight));
+	}
+	
+	private void scrollBy(int mx, int my){
+        centerX = Math.max(0, Math.min(centerX + mx, world.width() - 1));
+        centerY = Math.max(0, Math.min(centerY + my, world.height() - 1));
+    }
+	
+	private void displayTiles(AsciiPanel terminal, int left, int top) {
+	    for (int x = 0; x < screenWidth; x++){
+	        for (int y = 0; y < screenHeight; y++){
+	            int wx = x + left;
+	            int wy = y + top;
+	 
+	            terminal.write(world.glyph(wx, wy), x, y, world.color(wx, wy));
+	        }
+	    }
+	}
 		
 }

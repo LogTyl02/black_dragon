@@ -1,25 +1,62 @@
 package com.almanac.blackdragon.World;
 
+import com.almanac.blackdragon.Entity.Tile;
+
+
 public class WorldBuilder {
-	private Room[][] roomSet;
-	private int worldWidth;
-	private int worldHeight;
-	private World newWorld;
-	
-	public WorldBuilder(int worldWidth, int worldHeight) {
-		this.worldWidth = worldWidth;
-		this.worldHeight = worldHeight;
+	private int width;
+	private int height;
+	private Tile[][] tiles;
+
+	public WorldBuilder(int width, int height) {
+		this.width = width;
+		this.height = height;
+		this.tiles = new Tile[width][height];
 	}
-	
+
 	public World build() {
-		Room[][] worldRooms = populateWorld(this.worldWidth, this.worldHeight);
-		newWorld = new World(worldRooms);
-		return newWorld;
+		return new World(tiles);
 	}
-	
-	public Room[][] populateWorld(int width, int height) {
-		roomSet = new Room[width][height];
-		return roomSet;
+
+	private WorldBuilder randomizeTiles() {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				tiles[x][y] = Math.random() < 0.5 ? Tile.GRASS : Tile.WALL;
+			}
+		}
+		return this;
 	}
-	
+
+	private WorldBuilder smooth(int times) {
+		Tile[][] tiles2 = new Tile[width][height];
+		for (int time = 0; time < times; time++) {
+
+			for (int x = 0; x < width; x++) {
+				for (int y = 0; y < height; y++) {
+					int floors = 0;
+					int rocks = 0;
+
+					for (int ox = -1; ox < 2; ox++) {
+						for (int oy = -1; oy < 2; oy++) {
+							if (x + ox < 0 || x + ox >= width || y + oy < 0
+									|| y + oy >= height)
+								continue;
+
+							if (tiles[x + ox][y + oy] == Tile.GRASS)
+								floors++;
+							else
+								rocks++;
+						}
+					}
+					tiles2[x][y] = floors >= rocks ? Tile.GRASS : Tile.WALL;
+				}
+			}
+			tiles = tiles2;
+		}
+		return this;
+	}
+
+	public WorldBuilder makeCaves() {
+		return randomizeTiles().smooth(11);
+	}
 }
