@@ -27,7 +27,8 @@ public class Creature {
 	 * 	Constructor
 	 */
 	
-	public Creature(String name, char glyph, int level, int maximumHealth) {
+	public Creature(World world, String name, char glyph, int level, int maximumHealth) {
+		this.world = world;
 		this.name  = name;
 		this.glyph = glyph;
 		this.level = level;
@@ -64,7 +65,8 @@ public class Creature {
 	}
 	
 	public void moveBy(int mx, int my) {
-		AI.onEnter(x + mx, y + my, world.tile(x + mx, y + my));
+		Tile tile = world.tile(x + mx, y + my);
+		AI.onEnter(x + mx, y + my, tile);
 	}
 	
 	

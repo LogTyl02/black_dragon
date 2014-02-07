@@ -2,6 +2,7 @@ package com.almanac.blackdragon.World;
 
 import java.awt.Color;
 
+import com.almanac.blackdragon.Entity.Creature;
 import com.almanac.blackdragon.Entity.Tile;
 
 public class World {
@@ -36,6 +37,22 @@ public class World {
 		}
 	}
 	
+	public void addAtEmptyLocation(Creature creature) {
+		int x;
+		int y;
+		
+		
+		// Pick random spots until you find a walkable one
+		do {
+			x = (int)(Math.random() * width);
+			y = (int)(Math.random() * height);
+		}
+		while (!tile(x, y).isWalkable());
+		
+		// Put the creature there
+		creature.x = x;
+		creature.y = y;
+	}
 	
 	/*
 	 * 	Getters

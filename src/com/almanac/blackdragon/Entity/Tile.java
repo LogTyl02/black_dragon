@@ -30,5 +30,9 @@ public enum Tile {
 		return this == Tile.WALL;
 	}
 	
+	public boolean isWalkable() {
+		return this != WALL && this != VOID;
+	}
+	
 
 }

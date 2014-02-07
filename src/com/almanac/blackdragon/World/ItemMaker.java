@@ -1,6 +1,6 @@
-package com.almanac.blackdragon.Entity;
+package com.almanac.blackdragon.World;
 
-import com.almanac.blackdragon.World.World;
+import com.almanac.blackdragon.Entity.Item;
 
 import java.awt.Color;
 

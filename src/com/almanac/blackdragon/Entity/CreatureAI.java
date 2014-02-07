@@ -6,6 +6,11 @@ public class CreatureAI {
 	
 	public CreatureAI(Creature creature) {
 		this.creature = creature;
-		this.creature.setCreatureAI(this);s
+		this.creature.setCreatureAI(this);
 	}
+	
+	public void onEnter(int x, int y, Tile tile) {
+		
+	}
+	
 }

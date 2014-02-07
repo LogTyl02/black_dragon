@@ -1,14 +1,13 @@
 package com.almanac.blackdragon.Screens;
 
-import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import asciiPanel.AsciiPanel;
 
-import com.almanac.blackdragon.BlackDragon;
-import com.almanac.blackdragon.World.Room;
+import com.almanac.blackdragon.Entity.Creature;
+import com.almanac.blackdragon.World.CreatureMaker;
 import com.almanac.blackdragon.World.World;
 import com.almanac.blackdragon.World.WorldBuilder;
 
@@ -26,6 +25,7 @@ public class PlayScreen implements Screen {
 	private int centerX;
 	private int centerY;
 	
+	private Creature player;
 	private String NAME = "Dogleaf";
 	private String TITLE = "the Explorer";
 	private String LOCATION = " SPOOKY FOREST ";
@@ -38,6 +38,8 @@ public class PlayScreen implements Screen {
 		worldHeight			=	100;
 		
 		createWorld(worldWidth, worldHeight);
+		CreatureMaker creatureMaker = new CreatureMaker(world);
+		player = creatureMaker.newPlayer();
 	}
 	
 	private void createWorld(int worldWidth, int worldHeight) {
@@ -50,7 +52,7 @@ public class PlayScreen implements Screen {
         int top = getScrollY();
     
         displayTiles(terminal, left, top);
-        terminal.write('X', centerX - left, centerY - top);
+        terminal.write(player.glyph(), player.x - left, player.y - top);
 		
 	}
 
@@ -58,17 +60,17 @@ public class PlayScreen implements Screen {
 	public Screen respondToUserInput(KeyEvent key) {
 		switch (key.getKeyCode()){
 		case KeyEvent.VK_LEFT:
-		case KeyEvent.VK_H: scrollBy(-1, 0); break;
+		case KeyEvent.VK_NUMPAD4: player.moveBy(-1, 0); break;
 		case KeyEvent.VK_RIGHT:
-		case KeyEvent.VK_L: scrollBy( 1, 0); break;
+		case KeyEvent.VK_NUMPAD6: player.moveBy( 1, 0); break;
 		case KeyEvent.VK_UP:
-		case KeyEvent.VK_K: scrollBy( 0,-1); break;
+		case KeyEvent.VK_NUMPAD8: player.moveBy( 0,-1); break;
 		case KeyEvent.VK_DOWN:
-		case KeyEvent.VK_J: scrollBy( 0, 1); break;
-		case KeyEvent.VK_Y: scrollBy(-1,-1); break;
-		case KeyEvent.VK_U: scrollBy( 1,-1); break;
-		case KeyEvent.VK_B: scrollBy(-1, 1); break;
-		case KeyEvent.VK_N: scrollBy( 1, 1); break;
+		case KeyEvent.VK_NUMPAD2: player.moveBy( 0, 1); break;
+		case KeyEvent.VK_NUMPAD7: player.moveBy(-1,-1); break;
+		case KeyEvent.VK_NUMPAD9: player.moveBy( 1,-1); break;
+		case KeyEvent.VK_NUMPAD1: player.moveBy(-1, 1); break;
+		case KeyEvent.VK_NUMPAD3: player.moveBy( 1, 1); break;
 		}
 		
 		return this;
@@ -79,11 +81,11 @@ public class PlayScreen implements Screen {
 	}
 	
 	public int getScrollX() {
-	    return Math.max(0, Math.min(centerX - screenWidth / 2, world.width() - screenWidth));
+	    return Math.max(0, Math.min(player.x - screenWidth / 2, world.width() - screenWidth));
 	}
 	
 	public int getScrollY() {
-	    return Math.max(0, Math.min(centerY - screenHeight / 2, world.height() - screenHeight));
+	    return Math.max(0, Math.min(player.y - screenHeight / 2, world.height() - screenHeight));
 	}
 	
 	private void scrollBy(int mx, int my){
