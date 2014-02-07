@@ -8,7 +8,7 @@ public enum Tile {
 	DIRT((char)250, AsciiPanel.yellow),
 	WALL((char)177, AsciiPanel.brightYellow),
 	WATER('~', AsciiPanel.brightBlue),
-	VOID(('x'), AsciiPanel.brightBlack);
+	VOID('x', AsciiPanel.brightBlack);
 	
 	private char glyph;
 	private Color color;
@@ -24,6 +24,10 @@ public enum Tile {
 	Tile(char glyph, Color color) {
 		this.glyph = glyph;
 		this.color = color;
+	}
+	
+	public boolean isDiggable() {
+		return this == Tile.WALL;
 	}
 	
 

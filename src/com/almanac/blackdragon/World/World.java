@@ -30,6 +30,12 @@ public class World {
             return tiles[x][y];
     }
 	
+	public void dig(int x, int y) {
+		if (tile(x, y).isDiggable()) {
+			tiles[x][y] = Tile.GRASS;	
+		}
+	}
+	
 	
 	/*
 	 * 	Getters
