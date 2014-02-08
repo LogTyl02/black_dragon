@@ -9,12 +9,11 @@ public class FungusAI extends CreatureAI {
 	public FungusAI(Creature creature, CreatureMaker maker) {
 		super(creature);
 		this.maker = maker;
-		this.spreadCount = 0;
 		
 	}
 	
 	public void onUpdate() {
-		if (spreadCount < 5 && Math.random() < 0.01) {
+		if (spreadCount < 5 && Math.random() < 0.001) {
 			System.out.println(spreadCount);
 			spread();
 		}
@@ -33,6 +32,6 @@ public class FungusAI extends CreatureAI {
 		System.out.println("Spreading!");
 		child.x = x;
 		child.y = y;
-		this.spreadCount = this.spreadCount += 1;
+		spreadCount++;
 	}
 }
