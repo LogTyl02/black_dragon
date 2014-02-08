@@ -21,6 +21,7 @@ public class PlayScreen implements Screen {
 	
 	private int worldWidth;
 	private int worldHeight;
+	private int worldDepth;
 	
 	private int centerX;
 	private int centerY;
@@ -36,8 +37,9 @@ public class PlayScreen implements Screen {
 		messages			=	new ArrayList<String>();
 		worldWidth			=	200;
 		worldHeight			=	100;
+		worldDepth			=	5;
 		
-		createWorld(worldWidth, worldHeight);
+		createWorld(worldWidth, worldHeight, worldDepth);
 		CreatureMaker creatureMaker = new CreatureMaker(world);
 		
 		// Populate the world with baddies
@@ -45,8 +47,8 @@ public class PlayScreen implements Screen {
 		
 	}
 	
-	private void createWorld(int worldWidth, int worldHeight) {
-        world = new WorldBuilder(worldWidth, worldHeight).makeCaves().build();
+	private void createWorld(int worldWidth, int worldHeight, int worldDepth) {
+        world = new WorldBuilder(worldWidth, worldHeight, worldDepth).makeCaves().build();
     }
 
 	@Override
@@ -58,28 +60,35 @@ public class PlayScreen implements Screen {
         
         String name  = "Dogleaf";
         String title = " the Slow";
-        String stats = String.format(" %3d/%3d", player.currentHealth(), player.maximumHealth());
+        String stats = String.format("%3d/%3d HP", player.currentHealth(), player.maximumHealth());
         terminal.write(name + title, 1, 27);
         terminal.write(stats, 1, 28);
+        
+        displayMessages(terminal, messages);
         
 		
 	}
 
 	@Override
 	public Screen respondToUserInput(KeyEvent key) {
+		switch (key.getKeyChar()){
+        case '<': player.moveBy( 0, 0, -1); break;
+        case '>': player.moveBy( 0, 0, 1); break;
+        }
+		
 		switch (key.getKeyCode()){
 		case KeyEvent.VK_LEFT:
-		case KeyEvent.VK_NUMPAD4: player.moveBy(-1, 0); break;
+		case KeyEvent.VK_NUMPAD4: player.moveBy(-1, 0, 0); break;
 		case KeyEvent.VK_RIGHT:
-		case KeyEvent.VK_NUMPAD6: player.moveBy( 1, 0); break;
+		case KeyEvent.VK_NUMPAD6: player.moveBy( 1, 0, 0); break;
 		case KeyEvent.VK_UP:
-		case KeyEvent.VK_NUMPAD8: player.moveBy( 0,-1); break;
+		case KeyEvent.VK_NUMPAD8: player.moveBy( 0,-1, 0); break;
 		case KeyEvent.VK_DOWN:
-		case KeyEvent.VK_NUMPAD2: player.moveBy( 0, 1); break;
-		case KeyEvent.VK_NUMPAD7: player.moveBy(-1,-1); break;
-		case KeyEvent.VK_NUMPAD9: player.moveBy( 1,-1); break;
-		case KeyEvent.VK_NUMPAD1: player.moveBy(-1, 1); break;
-		case KeyEvent.VK_NUMPAD3: player.moveBy( 1, 1); break;
+		case KeyEvent.VK_NUMPAD2: player.moveBy( 0, 1, 0); break;
+		case KeyEvent.VK_NUMPAD7: player.moveBy(-1,-1, 0); break;
+		case KeyEvent.VK_NUMPAD9: player.moveBy( 1,-1, 0); break;
+		case KeyEvent.VK_NUMPAD1: player.moveBy(-1, 1, 0); break;
+		case KeyEvent.VK_NUMPAD3: player.moveBy( 1, 1, 0); break;
 		}
 		
 		world.update();
@@ -110,23 +119,32 @@ public class PlayScreen implements Screen {
 	            int wx = x + left;
 	            int wy = y + top;
 	            
-	            Creature creature = world.creature(wx, wy);
+	            Creature creature = world.creature(wx, wy, player.z);
 	            
 	            if (creature != null) {
 	            	terminal.write(creature.glyph(), creature.x - left, creature.y - top, creature.color());
 	            } else
 	 
-	            terminal.write(world.glyph(wx, wy), x, y, world.color(wx, wy));
+	            terminal.write(world.glyph(wx, wy, player.z), x, y, world.color(wx, wy, player.z));
 	        }
 	    }
 	}
 	
+	private void displayMessages(AsciiPanel terminal, List<String> messages) {
+	    int top = screenHeight - messages.size();
+	    for (int i = 0; i < messages.size(); i++){
+	        terminal.writeCenter(messages.get(i), top + 1);
+	    }
+	    messages.clear();
+	}
+	
 	private void createCreatures(CreatureMaker creatureMaker) {
-		player = creatureMaker.newPlayer();
+		player = creatureMaker.newPlayer(messages);
 		
-		for (int i = 0; i < 8; i++) {
-			System.out.println("Spawning a Fungus!");
-			creatureMaker.newFungus();
+		for (int z = 0; z < world.depth(); z++) {
+			for (int i = 0; i < 8; i++) {
+				creatureMaker.newFungus(z);
+			}
 		}
 	}
 		

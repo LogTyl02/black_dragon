@@ -22,14 +22,16 @@ public class FungusAI extends CreatureAI {
 	private void spread() {
 		int x = creature.x + (int)(Math.random() * 11) - 5;
 		int y = creature.y + (int)(Math.random() * 11) - 5;
+		int z = creature.z;
 		
-		if (!creature.canEnter(x, y)) {
+		if (!creature.canEnter(x, y, z)) {
+			
 			System.out.println("Not spreading at " + x + " " + y);
 			return;
 		}
 		
-		Creature child = maker.newFungus();
-		System.out.println("Spreading!");
+		Creature child = maker.newFungus(z);
+		creature.doAction("spreads a little...");
 		child.x = x;
 		child.y = y;
 		spreadCount++;

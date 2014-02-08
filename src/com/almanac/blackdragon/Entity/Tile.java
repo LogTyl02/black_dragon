@@ -4,10 +4,13 @@ import java.awt.Color;
 import asciiPanel.AsciiPanel;
 
 public enum Tile {	
-	GRASS((char)250, AsciiPanel.brightGreen),
+	GRASS((char)250, AsciiPanel.white),
 	DIRT((char)250, AsciiPanel.yellow),
-	WALL((char)177, AsciiPanel.brightYellow),
+	WALL((char)177, AsciiPanel.brightBlack),
 	WATER('~', AsciiPanel.brightBlue),
+	
+	STAIRS_DOWN('>', AsciiPanel.brightYellow),
+	STAIRS_UP('<', AsciiPanel.brightYellow),
 	VOID('x', AsciiPanel.brightBlack);
 	
 	private char glyph;
