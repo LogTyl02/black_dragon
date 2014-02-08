@@ -31,8 +31,8 @@ public class PlayScreen implements Screen {
 	private String LOCATION = " SPOOKY FOREST ";
 	
 	public PlayScreen() {
-		screenWidth			=	100;
-		screenHeight		=	30;
+		screenWidth			=	100;	// Change these to add black space to the side or bottom
+		screenHeight		=	26;
 		messages			=	new ArrayList<String>();
 		worldWidth			=	200;
 		worldHeight			=	100;
@@ -55,6 +55,12 @@ public class PlayScreen implements Screen {
         int top = getScrollY();
     
         displayTiles(terminal, left, top);
+        
+        String name  = "Dogleaf";
+        String title = " the Slow";
+        String stats = String.format(" %3d/%3d", player.currentHealth(), player.maximumHealth());
+        terminal.write(name + title, 1, 27);
+        terminal.write(stats, 1, 28);
         
 		
 	}

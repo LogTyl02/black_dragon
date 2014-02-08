@@ -17,14 +17,14 @@ public class CreatureMaker {
 	}
 	
 	public Creature newPlayer() {
-		Creature player = new Creature(world, "Player", '@', 1, 10, Color.white);
+		Creature player = new Creature(world, "Player", '@', 1, 100, 20, 5, Color.white);
 		world.addAtEmptyLocation(player);
 		new PlayerAI(player);
 		return player;
 	}
 	
 	public Creature newFungus() {
-		Creature fungus = new Creature(world, "Fungus", 'F', 1, 5, AsciiPanel.magenta);
+		Creature fungus = new Creature(world, "Fungus", 'F', 1, 10, 0, 0, AsciiPanel.brightMagenta);
 		world.addAtEmptyLocation(fungus);
 		new FungusAI(fungus, this);
 		return fungus;
