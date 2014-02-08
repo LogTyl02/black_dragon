@@ -13,4 +13,8 @@ public class CreatureAI {
 		
 	}
 	
+	public void onUpdate() {
+		
+	}
+	
 }

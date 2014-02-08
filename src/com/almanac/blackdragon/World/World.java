@@ -1,12 +1,15 @@
 package com.almanac.blackdragon.World;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.almanac.blackdragon.Entity.Creature;
 import com.almanac.blackdragon.Entity.Tile;
 
 public class World {
 	private Tile[][] tiles;
+	private List<Creature> creatures;
 	private int width;
 	private int height;
 	
@@ -18,6 +21,8 @@ public class World {
 		this.tiles = tiles;
 		this.width = tiles.length;
 		this.height = tiles[0].length;
+		
+		this.creatures = new ArrayList<Creature>();
 	}
 	
 	/*
@@ -37,6 +42,14 @@ public class World {
 		}
 	}
 	
+	public Creature creature(int x, int y){
+		for (Creature c : creatures){
+			if (c.x == x && c.y == y)
+				return c;
+		}
+		return null;
+	}
+	
 	public void addAtEmptyLocation(Creature creature) {
 		int x;
 		int y;
@@ -47,11 +60,27 @@ public class World {
 			x = (int)(Math.random() * width);
 			y = (int)(Math.random() * height);
 		}
-		while (!tile(x, y).isWalkable());
+		while (!tile(x, y).isWalkable() || creature(x, y) != null);	// Make sure no other creature is there
 		
 		// Put the creature there
 		creature.x = x;
 		creature.y = y;
+		
+		// Add the creature to the master list
+		creatures.add(creature);
+	}
+	
+	public void remove(Creature target) {
+		creatures.remove(target);
+	}
+	
+	public void update() {
+		
+		List<Creature> toUpdate = new ArrayList<Creature>(creatures);
+		for (Creature creature : toUpdate) {
+			
+			creature.update();
+		}
 	}
 	
 	/*

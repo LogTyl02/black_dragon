@@ -27,13 +27,14 @@ public class Creature {
 	 * 	Constructor
 	 */
 	
-	public Creature(World world, String name, char glyph, int level, int maximumHealth) {
+	public Creature(World world, String name, char glyph, int level, int maximumHealth, Color color) {
 		this.world = world;
 		this.name  = name;
 		this.glyph = glyph;
 		this.level = level;
 		this.maximumHealth = maximumHealth;
 		this.currentHealth = this.maximumHealth;
+		this.color = color;
 		
 		inventory = new Item[26];			// 26 is the maximum inventory space for any creature
 	}
@@ -44,11 +45,13 @@ public class Creature {
 	 */
 	
 	public void attack(Creature target) {
-		int damageAmount = Math.max(0, attackPower() - target.defenseValue());
+		//int damageAmount = Math.max(0, attackPower() - target.defenseValue());
 		
-		damageAmount = (int)(Math.random() * damageAmount) + 1;
+		//damageAmount = (int)(Math.random() * damageAmount) + 1;
 		
-		target.modifyHealth(-damageAmount);
+		//target.modifyHealth(-damageAmount);
+		
+		world.remove(target);	
 	}
 	
 	
@@ -66,7 +69,21 @@ public class Creature {
 	
 	public void moveBy(int mx, int my) {
 		Tile tile = world.tile(x + mx, y + my);
-		AI.onEnter(x + mx, y + my, tile);
+		Creature target = world.creature(x+mx, y+my);
+		
+		if (target == null) {
+			AI.onEnter(x + mx, y + my, tile);
+		} else {
+			attack(target);
+		}
+	}
+	
+	public void update() {
+		AI.onUpdate();
+	}
+	
+	public boolean canEnter(int wx, int wy) {
+		return world.tile(wx, wy).isWalkable() && world.creature(wx, wy) == null;
 	}
 	
 	

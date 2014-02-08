@@ -39,7 +39,10 @@ public class PlayScreen implements Screen {
 		
 		createWorld(worldWidth, worldHeight);
 		CreatureMaker creatureMaker = new CreatureMaker(world);
-		player = creatureMaker.newPlayer();
+		
+		// Populate the world with baddies
+		createCreatures(creatureMaker);
+		
 	}
 	
 	private void createWorld(int worldWidth, int worldHeight) {
@@ -52,7 +55,7 @@ public class PlayScreen implements Screen {
         int top = getScrollY();
     
         displayTiles(terminal, left, top);
-        terminal.write(player.glyph(), player.x - left, player.y - top);
+        
 		
 	}
 
@@ -72,6 +75,8 @@ public class PlayScreen implements Screen {
 		case KeyEvent.VK_NUMPAD1: player.moveBy(-1, 1); break;
 		case KeyEvent.VK_NUMPAD3: player.moveBy( 1, 1); break;
 		}
+		
+		world.update();
 		
 		return this;
 	}
@@ -98,10 +103,25 @@ public class PlayScreen implements Screen {
 	        for (int y = 0; y < screenHeight; y++){
 	            int wx = x + left;
 	            int wy = y + top;
+	            
+	            Creature creature = world.creature(wx, wy);
+	            
+	            if (creature != null) {
+	            	terminal.write(creature.glyph(), creature.x - left, creature.y - top, creature.color());
+	            } else
 	 
 	            terminal.write(world.glyph(wx, wy), x, y, world.color(wx, wy));
 	        }
 	    }
+	}
+	
+	private void createCreatures(CreatureMaker creatureMaker) {
+		player = creatureMaker.newPlayer();
+		
+		for (int i = 0; i < 8; i++) {
+			System.out.println("Spawning a Fungus!");
+			creatureMaker.newFungus();
+		}
 	}
 		
 }
