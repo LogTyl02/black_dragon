@@ -5,11 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.almanac.blackdragon.Entity.Creature;
+import com.almanac.blackdragon.Entity.Item;
 import com.almanac.blackdragon.Entity.Tile;
 
 public class World {
 	private Tile[][][] tiles;
 	private List<Creature> creatures;
+	
+	// Only one item per tile, for now
+	private Item[][][] items;
+	
 	private int width;
 	private int height;
 	private int depth;
@@ -25,6 +30,7 @@ public class World {
 		this.depth = tiles[0][0].length;
 		
 		this.creatures = new ArrayList<Creature>();
+		this.items = new Item[width][height][depth];
 	}
 	
 	/*
@@ -73,6 +79,19 @@ public class World {
 		creatures.add(creature);
 	}
 	
+	public void addAtEmptyLocation(Item item, int depth) {
+		int x;
+		int y;
+		
+		do {
+			x = (int)(Math.random() * width);
+			y = (int)(Math.random() * height);
+		}
+		while (!tile(x, y, depth).isWalkable() || item(x, y, depth) != null);
+		
+		items[x][y][depth] = item;
+	}
+	
 	public void remove(Creature target) {
 		creatures.remove(target);
 	}
@@ -102,14 +121,36 @@ public class World {
 		return depth;
 	}
 	
+	public Item item(int x, int y, int z) {
+		return items[x][y][z];
+	}
+	
 	public char glyph(int x, int y, int z){
         Creature creature = creature(x, y, z);
-        return creature != null ? creature.glyph() : tile(x, y, z).glyph();
+
+        if (creature != null) {
+        	return creature.glyph();
+        }
+        
+        if (item(x, y, z) != null) {
+        	return item(x, y, z).glyph();
+        }
+        
+        return tile(x, y, z).glyph();
     }
 	
 	public Color color(int x, int y, int z) {
 		Creature creature = creature(x, y, z);
-	    return creature != null ? creature.color() : tile(x, y, z).color();
+
+		if (creature != null) {
+			return creature.color();
+		}
+		
+		if (item(x, y, z) != null) {
+			return item(x, y, z).color();
+		}
+		
+		return tile(x, y, z).color();
     }
 	
 }

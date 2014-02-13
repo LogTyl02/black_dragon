@@ -1,8 +1,8 @@
 package com.almanac.blackdragon.World;
 
-import com.almanac.blackdragon.Entity.Item;
+import asciiPanel.AsciiPanel;
 
-import java.awt.Color;
+import com.almanac.blackdragon.Entity.Item;
 
 /*
  * 	I MAKE ITEMS FOR YOU TO ADVENTURE WITH!
@@ -16,9 +16,10 @@ public class ItemMaker {
 		this.world = world;
 	}
 	
-	public Item newPotion() {
-		Item potion = new Item("Potion", '!', Color.cyan, 2, 5);
-		return potion;
+	public Item newRock(int depth) {
+		Item rock = new Item("Rock", '*', AsciiPanel.yellow);
+		world.addAtEmptyLocation(rock, depth);
+		return rock;
 	}
 	
 }

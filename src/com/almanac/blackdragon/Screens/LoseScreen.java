@@ -8,7 +8,7 @@ public class LoseScreen implements Screen {
 
 	@Override
 	public void displayOutput(AsciiPanel terminal) {
-		terminal.writeCenter("YOU ARE DEAD", 13, AsciiPanel.red);
+		terminal.writeCenter("YOU ARE DEAD", 13, AsciiPanel.brightRed);
 		
 	}
 

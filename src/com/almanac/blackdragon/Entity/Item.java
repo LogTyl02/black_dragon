@@ -6,15 +6,24 @@ public class Item {
 	private String name;
 	private char glyph;
 	private Color color;
-	private int weight;
-	private int value;
-	
-	public Item(String name, char glyph, Color color, int weight, int value) {
+
+	public Item(String name, char glyph, Color color) {
 		this.name = name;
 		this.glyph = glyph;
 		this.color = color;
-		this.weight = weight;
-		this.value = value;
+
+	}
+	
+	public String name() {
+		return name;
+	}
+	
+	public char glyph() {
+		return glyph;
+	}
+	
+	public Color color() {
+		return color;
 	}
 
 }

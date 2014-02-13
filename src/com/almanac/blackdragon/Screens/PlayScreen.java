@@ -10,6 +10,7 @@ import asciiPanel.AsciiPanel;
 import com.almanac.blackdragon.Entity.Creature;
 import com.almanac.blackdragon.World.CreatureMaker;
 import com.almanac.blackdragon.World.FieldOfView;
+import com.almanac.blackdragon.World.ItemMaker;
 import com.almanac.blackdragon.World.World;
 import com.almanac.blackdragon.World.WorldBuilder;
 
@@ -19,7 +20,6 @@ public class PlayScreen implements Screen {
 	private List<String> messages;
 	private int screenWidth;
 	private int screenHeight;
-	private Screen subScreen;
 	
 	private int worldWidth;
 	private int worldHeight;
@@ -43,10 +43,14 @@ public class PlayScreen implements Screen {
 		createWorld(worldWidth, worldHeight, worldDepth);
 		fov = new FieldOfView(world);
 		CreatureMaker creatureMaker = new CreatureMaker(world, fov);
+		ItemMaker itemMaker = new ItemMaker(world);
 		
 		
 		// Populate the world with baddies
 		createCreatures(creatureMaker);
+		
+		// Put some items down
+		createItems(itemMaker);
 		
 	}
 	
@@ -61,7 +65,7 @@ public class PlayScreen implements Screen {
     
         displayTiles(terminal, left, top);
         
-        String name  = "Dogleaf";
+        String name  = "Tyler";
         String title = " the Slow";
         String stats = String.format("%3d/%3d HP", player.currentHealth(), player.maximumHealth());
         terminal.write(name + title, 1, 27);
@@ -151,6 +155,15 @@ public class PlayScreen implements Screen {
 		for (int z = 0; z < world.depth(); z++) {
 			for (int i = 0; i < 20; i++) {
 				creatureMaker.newBat(z);
+			}
+		}
+	}
+	
+	private void createItems(ItemMaker itemMaker) {
+		
+		for (int z = 0; z < world.depth(); z++) {
+			for (int i = 0; i < 50; i++) {
+				itemMaker.newRock(z);
 			}
 		}
 	}
