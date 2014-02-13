@@ -29,8 +29,8 @@ public class PlayerAI extends CreatureAI {
 			creature.x = x;
 			creature.y = y;
 			creature.z = z;
-		} else if (tile.isDiggable()) {
-			creature.dig(x, y, z);
+		} else {
+			creature.doAction("bump into a wall");
 		}
 	}
 	

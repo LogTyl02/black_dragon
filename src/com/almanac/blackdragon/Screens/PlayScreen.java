@@ -36,8 +36,8 @@ public class PlayScreen implements Screen {
 		screenWidth			=	100;	// Change these to add black space to the side or bottom
 		screenHeight		=	26;
 		messages			=	new ArrayList<String>();
-		worldWidth			=	200;
-		worldHeight			=	100;
+		worldWidth			=	100;
+		worldHeight			=	50;
 		worldDepth			=	5;
 		
 		createWorld(worldWidth, worldHeight, worldDepth);
@@ -95,6 +95,9 @@ public class PlayScreen implements Screen {
 		}
 		
 		world.update();
+		if (player.currentHealth() <= 0) {
+			return new LoseScreen();
+		}
 		
 		return this;
 	}
@@ -113,25 +116,20 @@ public class PlayScreen implements Screen {
     }
 	
 	private void displayTiles(AsciiPanel terminal, int left, int top) {
-		fov.update(player.x, player.y, player.z, player.visionRadius());
-		
-	     for (int x = 0; x < screenWidth; x++){
-	         for (int y = 0; y < screenHeight; y++){
-	             int wx = x + left;
-	             int wy = y + top;
+	    fov.update(player.x, player.y, player.z, player.visionRadius());
+	     
+	    for (int x = 0; x < screenWidth; x++){
+	        for (int y = 0; y < screenHeight; y++){
+	            int wx = x + left;
+	            int wy = y + top;
 	 
-	             if (player.canSee(wx, wy, player.z)){
-	                 Creature creature = world.creature(wx, wy, player.z);
-	                 if (creature != null)
-	                     terminal.write(creature.glyph(), creature.x - left, creature.y - top, creature.color());
-	                 else
-	                     terminal.write(world.glyph(wx, wy, player.z), x, y, world.color(wx, wy, player.z));
-	             } else {
-	                 terminal.write(fov.tile(wx, wy, player.z).glyph(), x, y, Color.darkGray);
-	             }
-	         }
-	     }
-	 }
+	            if (player.canSee(wx, wy, player.z))
+	                terminal.write(world.glyph(wx, wy, player.z), x, y, world.color(wx, wy, player.z));
+	            else
+	                terminal.write(fov.tile(wx, wy, player.z).glyph(), x, y, Color.darkGray);
+	        }
+	    }
+	}
 	
 	private void displayMessages(AsciiPanel terminal, List<String> messages) {
 	    int top = screenHeight - messages.size();
@@ -147,6 +145,12 @@ public class PlayScreen implements Screen {
 		for (int z = 0; z < world.depth(); z++) {
 			for (int i = 0; i < 8; i++) {
 				creatureMaker.newFungus(z);
+			}
+		}
+		
+		for (int z = 0; z < world.depth(); z++) {
+			for (int i = 0; i < 20; i++) {
+				creatureMaker.newBat(z);
 			}
 		}
 	}

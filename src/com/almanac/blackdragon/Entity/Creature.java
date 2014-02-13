@@ -85,6 +85,10 @@ public class Creature {
 	
 	public void moveBy(int mx, int my, int mz){
         Tile tile = world.tile(x+mx, y+my, z+mz);
+        
+        if (mx == 0 && my == 0 && mz == 0) {
+        	return;
+        }
      
         if (mz == -1){
             if (tile == Tile.STAIRS_DOWN) {
@@ -118,24 +122,24 @@ public class Creature {
 		return world.tile(wx, wy, wz).isWalkable() && world.creature(wx, wy, wz) == null;
 	}
 	
-	public void doAction(String message, Object ... params) {
-		int r = 9;
-		for (int ox = -r; ox < r+1; ox++){
-			for (int oy = -r; oy < r+1; oy++){
-				if (ox*ox + oy*oy > r*r)
-					continue;
-				
-				Creature other = world.creature(x+ox, y+oy, z);
-				
-				if (other == null)
-					continue;
-				
-				if (other == this)
-					other.notify("You " + message + ".", params);
-				else
-					other.notify(String.format("The '%s' %s.", glyph, makeSecondPerson(message)), params);
-			}
-		}
+	public void doAction(String message, Object ... params){
+	    int r = 9;
+	    for (int ox = -r; ox < r+1; ox++){
+	        for (int oy = -r; oy < r+1; oy++){
+	            if (ox*ox + oy*oy > r*r)
+	                continue;
+	          
+	            Creature other = world.creature(x+ox, y+oy, z);
+	          
+	            if (other == null)
+	                continue;
+	          
+	            if (other == this)
+	                other.notify("You " + message + ".", params);
+	            else if (other.canSee(x, y, z))
+	                other.notify(String.format("The %s %s.", name, makeSecondPerson(message)), params);
+	         }
+	    }
 	}
 	
 	private String makeSecondPerson(String text){
@@ -166,6 +170,10 @@ public class Creature {
 	/*
 	 * 	Getters
 	 */
+	
+	public Creature creature(int wx, int wy, int wz) {
+		return world.creature(wx, wy, wz);
+	}
 	
 	public String name() {
 		return name;
