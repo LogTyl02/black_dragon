@@ -22,6 +22,8 @@ public class Creature {
 	private int attackPower;
 	private int defenseValue;
 	
+	private int visionRadius;
+	
 	private Item[] inventory;
 	
 	/*
@@ -38,6 +40,8 @@ public class Creature {
 		this.attackPower = attack;
 		this.defenseValue = defense;
 		this.color = color;
+		this.visionRadius = 9;
+		
 		
 		inventory = new Item[26];			// 26 is the maximum inventory space for any creature
 	}
@@ -148,6 +152,18 @@ public class Creature {
 	}
 	
 	/*
+	 *  Booleans
+	 */
+	
+	public boolean canSee(int wx, int wy, int wz) {
+		return AI.canSee(wx, wy, wz);
+	}
+	
+	public Tile tile(int wx, int wy, int wz) {
+		return world.tile(wx, wy, wz);
+	}
+	
+	/*
 	 * 	Getters
 	 */
 	
@@ -186,6 +202,11 @@ public class Creature {
 	public Item[] inventory() {
 		return inventory;
 	}
+	
+	public int visionRadius() {
+		return visionRadius;
+	}
+	
 	
 	/*
 	 * 	Setter Injection

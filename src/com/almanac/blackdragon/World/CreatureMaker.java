@@ -12,15 +12,17 @@ import com.almanac.blackdragon.Entity.PlayerAI;
 public class CreatureMaker {
 
 	private World world;
+	private FieldOfView fov;
 	
-	public CreatureMaker(World world) {
+	public CreatureMaker(World world, FieldOfView fov) {
 		this.world = world;
+		this.fov = fov;
 	}
 	
 	public Creature newPlayer(List<String> messages) {
 		Creature player = new Creature(world, "Player", '@', 1, 100, 12, 5, Color.white);
 		world.addAtEmptyLocation(player, 0);
-		new PlayerAI(player, messages);
+		new PlayerAI(player, messages, fov);
 		return player;
 	}
 	

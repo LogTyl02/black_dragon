@@ -11,7 +11,8 @@ public enum Tile {
 	
 	STAIRS_DOWN('>', AsciiPanel.brightYellow),
 	STAIRS_UP('<', AsciiPanel.brightYellow),
-	VOID('x', AsciiPanel.brightBlack);
+	VOID('x', AsciiPanel.brightBlack),
+	UNKNOWN(' ', AsciiPanel.white);
 	
 	private char glyph;
 	private Color color;

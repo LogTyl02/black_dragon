@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.almanac.blackdragon.Entity.Point;
 import com.almanac.blackdragon.Entity.Tile;
 
 

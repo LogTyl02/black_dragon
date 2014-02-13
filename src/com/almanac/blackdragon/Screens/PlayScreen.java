@@ -1,5 +1,6 @@
 package com.almanac.blackdragon.Screens;
 
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +9,7 @@ import asciiPanel.AsciiPanel;
 
 import com.almanac.blackdragon.Entity.Creature;
 import com.almanac.blackdragon.World.CreatureMaker;
+import com.almanac.blackdragon.World.FieldOfView;
 import com.almanac.blackdragon.World.World;
 import com.almanac.blackdragon.World.WorldBuilder;
 
@@ -27,9 +29,8 @@ public class PlayScreen implements Screen {
 	private int centerY;
 	
 	private Creature player;
-	private String NAME = "Dogleaf";
-	private String TITLE = "the Explorer";
-	private String LOCATION = " SPOOKY FOREST ";
+	
+	private FieldOfView fov;
 	
 	public PlayScreen() {
 		screenWidth			=	100;	// Change these to add black space to the side or bottom
@@ -40,7 +41,9 @@ public class PlayScreen implements Screen {
 		worldDepth			=	5;
 		
 		createWorld(worldWidth, worldHeight, worldDepth);
-		CreatureMaker creatureMaker = new CreatureMaker(world);
+		fov = new FieldOfView(world);
+		CreatureMaker creatureMaker = new CreatureMaker(world, fov);
+		
 		
 		// Populate the world with baddies
 		createCreatures(creatureMaker);
@@ -96,10 +99,6 @@ public class PlayScreen implements Screen {
 		return this;
 	}
 	
-	private void debugPrints() {
-		
-	}
-	
 	public int getScrollX() {
 	    return Math.max(0, Math.min(player.x - screenWidth / 2, world.width() - screenWidth));
 	}
@@ -114,21 +113,25 @@ public class PlayScreen implements Screen {
     }
 	
 	private void displayTiles(AsciiPanel terminal, int left, int top) {
-	    for (int x = 0; x < screenWidth; x++){
-	        for (int y = 0; y < screenHeight; y++){
-	            int wx = x + left;
-	            int wy = y + top;
-	            
-	            Creature creature = world.creature(wx, wy, player.z);
-	            
-	            if (creature != null) {
-	            	terminal.write(creature.glyph(), creature.x - left, creature.y - top, creature.color());
-	            } else
+		fov.update(player.x, player.y, player.z, player.visionRadius());
+		
+	     for (int x = 0; x < screenWidth; x++){
+	         for (int y = 0; y < screenHeight; y++){
+	             int wx = x + left;
+	             int wy = y + top;
 	 
-	            terminal.write(world.glyph(wx, wy, player.z), x, y, world.color(wx, wy, player.z));
-	        }
-	    }
-	}
+	             if (player.canSee(wx, wy, player.z)){
+	                 Creature creature = world.creature(wx, wy, player.z);
+	                 if (creature != null)
+	                     terminal.write(creature.glyph(), creature.x - left, creature.y - top, creature.color());
+	                 else
+	                     terminal.write(world.glyph(wx, wy, player.z), x, y, world.color(wx, wy, player.z));
+	             } else {
+	                 terminal.write(fov.tile(wx, wy, player.z).glyph(), x, y, Color.darkGray);
+	             }
+	         }
+	     }
+	 }
 	
 	private void displayMessages(AsciiPanel terminal, List<String> messages) {
 	    int top = screenHeight - messages.size();
