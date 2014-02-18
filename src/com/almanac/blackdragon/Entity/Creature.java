@@ -24,7 +24,7 @@ public class Creature {
 	
 	private int visionRadius;
 	
-	private Item[] inventory;
+	private Inventory inventory;
 	
 	/*
 	 * 	Constructor
@@ -41,15 +41,32 @@ public class Creature {
 		this.defenseValue = defense;
 		this.color = color;
 		this.visionRadius = 9;
+		this.inventory = new Inventory(20);
 		
-		
-		inventory = new Item[26];			// 26 is the maximum inventory space for any creature
 	}
 	
 	
 	/*
 	 * 	Methods
 	 */
+	
+	public void pickup() {
+		Item item = world.item(x, y, z);
+		
+		if (inventory.isFull() || item == null) {
+			doAction("look for something to grab, but find nothing");
+		} else {
+			doAction("pick up a %s", item.name());
+			inventory.add(item);
+			world.remove(x, y, z);
+		}
+	}
+	
+	public void drop(Item item) {
+		doAction("drop a " + item.name());
+		inventory.remove(item);
+		world.addAtEmptySpace(item, x, y, z);
+	}
 	
 	public void attack(Creature target) {
 		int damageAmount = Math.max(0, attackPower() - target.defenseValue());
@@ -207,7 +224,7 @@ public class Creature {
 		return defenseValue;
 	}
 	
-	public Item[] inventory() {
+	public Inventory inventory() {
 		return inventory;
 	}
 	

@@ -96,6 +96,8 @@ public class PlayScreen implements Screen {
 		case KeyEvent.VK_NUMPAD9: player.moveBy( 1,-1, 0); break;
 		case KeyEvent.VK_NUMPAD1: player.moveBy(-1, 1, 0); break;
 		case KeyEvent.VK_NUMPAD3: player.moveBy( 1, 1, 0); break;
+		
+		case KeyEvent.VK_COMMA: player.pickup(); break;
 		}
 		
 		world.update();
