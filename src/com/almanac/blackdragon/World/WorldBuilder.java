@@ -28,6 +28,10 @@ public class WorldBuilder {
 	public World build() {
 		return new World(tiles);
 	}
+	
+	public World fileBuild() {
+		return new World(tiles);
+	}
 
 	private WorldBuilder randomizeTiles() {
 		for (int x = 0; x < width; x++) {
