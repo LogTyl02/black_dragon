@@ -6,12 +6,19 @@ public class Item {
 	private String name;
 	private char glyph;
 	private Color color;
+	
+	private int nutrition;
+	
 
 	public Item(String name, char glyph, Color color) {
 		this.name = name;
 		this.glyph = glyph;
 		this.color = color;
 
+	}
+	
+	public void modifyNutrition(int amount) {
+		nutrition += amount;
 	}
 	
 	public String name() {
@@ -24,6 +31,10 @@ public class Item {
 	
 	public Color color() {
 		return color;
+	}
+	
+	public int nutrition() {
+		return nutrition;
 	}
 
 }

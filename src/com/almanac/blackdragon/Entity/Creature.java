@@ -91,8 +91,15 @@ public class Creature {
 		
 		if (currentHealth < 1) {
 			doAction("kill the %s!", name);
+			leaveCorpse();
 			world.remove(this);
 		}
+	}
+	
+	private void leaveCorpse() {
+		Item corpse = new Item(name + " corpse", '%', color);
+		corpse.modifyNutrition(maximumHealth * 2);
+		world.addAtEmptySpace(corpse, x, y, z);
 	}
 	
 	public void dig(int wx, int wy, int wz) {
